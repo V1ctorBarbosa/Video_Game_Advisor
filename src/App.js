@@ -9,6 +9,9 @@ import Error from "./pages/error/Error";
 //Router
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+//Context
+import { AdviseContext } from "./context/advise";
+
 function App() {
   return (
     <Router>
