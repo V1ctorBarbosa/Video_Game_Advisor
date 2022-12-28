@@ -1,64 +1,109 @@
 //React
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 
 //Schema
 import { schema } from './Schema';
 
+//Dropzone
+import {useDropzone} from 'react-dropzone';
+
 //HookForm + Yup
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 
 export default function AdviseForm() {
 
-    const schema = yup.object().shape({
-        id: yup.number().positive().integer().required(),
-        name: yup.string().required(),
-        year: yup.number().positive().integer().required(),
-        console: yup.string().required(),
-        studio: yup.string().required(),
-        genre: yup.string().required()
+    const [selectedImage, setSelectedImage] = useState([])
+    const [inputContent, setInputContent] = useState({
+        name: "",
+        year: 0,
+        console: "",
+        studio: "",
+        genre: "",
     })
 
-    const { register, handleSubmit, errors } = useForm({
+    const { handleSubmit, errors } = useForm({
         resolver: yupResolver(schema), 
     })
 
+    const onDrop = useCallback(acceptedFiles => {
+        setSelectedImage(acceptedFiles.map(file =>
+            Object.assign(file, {
+                preview: URL.createObjectURL(file)
+            })
+        ))
+      }, [])
+
+      const {getRootProps, getInputProps} = useDropzone({onDrop})
+      const selected_images = selectedImage?.map(file=>(
+        <div>
+            <img src={file.preview} style={{width: '200px'}} alt='' />
+        </div>
+      ))
+
     const submitForm = (data) => {
-        console.log(data)
+        console.log(inputContent)
     }
+
   return (
     <div>
+        <div>
+            <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                    <p>Drop the files here ...</p> :
+                    <p>Drag 'n' drop some files here, or click to select files</p>
+                <div>{selected_images}</div>
+            </div>
+        </div>
+
         <form onSubmit={handleSubmit(submitForm)}>
-            <input 
-                type='text'
-                name='name'
-                placeholder='Game Name...'
-                ref={register} />
+            <label>
+                Name:
+                <input 
+                    type='text'
+                    name='name'
+                    placeholder='Game Name...'
+                    />
+            </label>
             
-            <input 
-                type='text'
-                name='year'
-                placeholder='Game Year...'
-                ref={register} />
+            <label>
+                Year:
+                <input 
+                    type='text'
+                    name='year'
+                    placeholder='Game Year...'
+                    />
+            </label>
 
-            <input 
-                type='text'
-                name='console'
-                placeholder='Game Console...'
-                ref={register} />
+            <label>
+                Console: 
+                <input 
+                    type='text'
+                    name='console'
+                    placeholder='Game Console...'
+                    value={inputContent.console}
+                    />
+            </label>
 
-            <input 
-                type='text'
-                name='studio'
-                placeholder='Game Studio...'
-                ref={register} />
+            <label>
+                Studio:
+                <input 
+                    type='text'
+                    name='studio'
+                    placeholder='Game Studio...'
+                    value={inputContent.studio}
+                    />
+            </label>
 
-            <input 
-                type='text'
-                name='genre'
-                placeholder='Advise Genre...'
-                ref={register} />
+            <label>
+                Genre:
+                <input 
+                    type='text'
+                    name='genre'
+                    placeholder='Advise Genre...'
+                    value={inputContent.genre}
+                    />
+            </label>
 
             <input type='submit' id='submit' />
         </form>

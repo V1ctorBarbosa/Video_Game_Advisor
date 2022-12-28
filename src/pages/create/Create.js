@@ -8,7 +8,6 @@ import { AiOutlineLeft } from "react-icons/ai";
 import { Link } from 'react-router-dom';
 
 //Components
-import Dropzone from '../../components/Dropzone/Dropzone';
 import AdviseForm from '../../components/AdviseForm/AdviseForm';
 
 export default function Create() {
@@ -18,7 +17,6 @@ export default function Create() {
       <Link to='/'>
         <AiOutlineLeft/>
       </Link>
-      <Dropzone/>
       <AdviseForm />
     </div>
   )
