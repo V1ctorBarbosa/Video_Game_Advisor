@@ -1,5 +1,5 @@
 //React
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useState, useRef} from 'react';
 
 //Schema
 import { schema } from './Schema';
@@ -14,17 +14,27 @@ import {yupResolver} from '@hookform/resolvers/yup';
 export default function AdviseForm() {
 
     const [selectedImage, setSelectedImage] = useState([])
-    const [inputContent, setInputContent] = useState({
-        name: "",
-        year: 0,
-        console: "",
-        studio: "",
-        genre: "",
-    })
+    const initialValues = {
+        name: '',
+        year: undefined,
+        console: '',
+        studio: '',
+        genre: ''
+    }
+    const [values, setValues] = useState(initialValues);
 
-    const { handleSubmit, errors } = useForm({
-        resolver: yupResolver(schema), 
-    })
+    const handleInputChange = (e) => {
+        const {name, value} = e.target;
+
+        setValues({
+            ...values,
+            [name]: value,
+        });
+    };
+
+    const { register, handleSubmit, errors } = useForm({
+        resolver: yupResolver(schema),
+      });
 
     const onDrop = useCallback(acceptedFiles => {
         setSelectedImage(acceptedFiles.map(file =>
@@ -41,9 +51,10 @@ export default function AdviseForm() {
         </div>
       ))
 
-    const submitForm = (data) => {
-        console.log(inputContent)
-    }
+      const submitForm = (data) => {
+        console.log(data);
+      };
+
 
   return (
     <div>
@@ -63,15 +74,21 @@ export default function AdviseForm() {
                     type='text'
                     name='name'
                     placeholder='Game Name...'
+                    value={values.name}
+                    onChange={handleInputChange}
+                    {...register('name', { required: true })}
                     />
             </label>
             
             <label>
                 Year:
                 <input 
-                    type='text'
+                    type='number'
                     name='year'
                     placeholder='Game Year...'
+                    value={values.year}
+                    onChange={handleInputChange}
+                    {...register('year', { required: true })}
                     />
             </label>
 
@@ -81,7 +98,8 @@ export default function AdviseForm() {
                     type='text'
                     name='console'
                     placeholder='Game Console...'
-                    value={inputContent.console}
+                    value={values.console}
+                    onChange={handleInputChange}
                     />
             </label>
 
@@ -91,7 +109,8 @@ export default function AdviseForm() {
                     type='text'
                     name='studio'
                     placeholder='Game Studio...'
-                    value={inputContent.studio}
+                    value={values.studio}
+                    onChange={handleInputChange}
                     />
             </label>
 
@@ -101,7 +120,8 @@ export default function AdviseForm() {
                     type='text'
                     name='genre'
                     placeholder='Advise Genre...'
-                    value={inputContent.genre}
+                    value={values.genre}
+                    onChange={handleInputChange}
                     />
             </label>
 
