@@ -1,7 +1,7 @@
 //React
-import React, {useCallback, useState, useRef} from 'react';
+import React, {useCallback, useState} from 'react';
 
-//Schema
+// Schema
 import { schema } from './Schema';
 
 //Dropzone
@@ -11,28 +11,14 @@ import {useDropzone} from 'react-dropzone';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 
+//Firebase
+import firebase from '../../services/firebase';
+
 export default function AdviseForm() {
 
     const [selectedImage, setSelectedImage] = useState([])
-    const initialValues = {
-        name: '',
-        year: undefined,
-        console: '',
-        studio: '',
-        genre: ''
-    }
-    const [values, setValues] = useState(initialValues);
 
-    const handleInputChange = (e) => {
-        const {name, value} = e.target;
-
-        setValues({
-            ...values,
-            [name]: value,
-        });
-    };
-
-    const { register, handleSubmit, errors } = useForm({
+    const { register, handleSubmit, formState: {errors}} = useForm({
         resolver: yupResolver(schema),
       });
 
@@ -51,8 +37,15 @@ export default function AdviseForm() {
         </div>
       ))
 
-      const submitForm = (data) => {
-        console.log(data);
+      const submitForm =  async (data) => {
+        let id = 1;
+        await firebase.firestore().collection('advise').doc(`${id}`).set({
+            name: data.name,
+            year: data.year,
+            console: data.console,
+            studio: data.studio,
+            genre: data.genre
+        })
       };
 
 
@@ -72,60 +65,53 @@ export default function AdviseForm() {
                 Name:
                 <input 
                     type='text'
-                    name='name'
-                    placeholder='Game Name...'
-                    value={values.name}
-                    onChange={handleInputChange}
-                    {...register('name', { required: true })}
-                    />
-            </label>
-            
-            <label>
-                Year:
-                <input 
-                    type='number'
-                    name='year'
-                    placeholder='Game Year...'
-                    value={values.year}
-                    onChange={handleInputChange}
-                    {...register('year', { required: true })}
-                    />
+                    name='name'  
+                    {...register('name')}                
+                />
+                <p>{errors.name?.message}</p>
             </label>
 
             <label>
-                Console: 
+                Year
+                <input 
+                    type='number'
+                    name='year'  
+                    {...register('year')}                
+                />
+                <p>{errors.year?.message}</p>
+            </label>
+
+            <label>
+                Console:
                 <input 
                     type='text'
-                    name='console'
-                    placeholder='Game Console...'
-                    value={values.console}
-                    onChange={handleInputChange}
-                    />
+                    name='console'  
+                    {...register('console')}                
+                />
+                <p>{errors.console?.message}</p>
             </label>
 
             <label>
                 Studio:
                 <input 
                     type='text'
-                    name='studio'
-                    placeholder='Game Studio...'
-                    value={values.studio}
-                    onChange={handleInputChange}
-                    />
+                    name='studio'  
+                    {...register('studio')}                
+                />
+                <p>{errors.studio?.message}</p>
             </label>
 
             <label>
                 Genre:
                 <input 
                     type='text'
-                    name='genre'
-                    placeholder='Advise Genre...'
-                    value={values.genre}
-                    onChange={handleInputChange}
-                    />
+                    name='genre'  
+                    {...register('genre')}                
+                />
+                <p>{errors.genre?.message}</p>
             </label>
 
-            <input type='submit' id='submit' />
+            <button type='submit'>Enviar</button>
         </form>
     </div>
   )
