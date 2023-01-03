@@ -18,7 +18,7 @@ export default function AdviseForm() {
 
     const [selectedImage, setSelectedImage] = useState([])
 
-    const { register, handleSubmit, formState: {errors}} = useForm({
+    const { register, handleSubmit, formState: {errors}, reset} = useForm({
         resolver: yupResolver(schema),
       });
 
@@ -45,6 +45,14 @@ export default function AdviseForm() {
             console: data.console,
             studio: data.studio,
             genre: data.genre
+        })
+
+        reset({
+            name: '',
+            year: 0,
+            console: '',
+            studio: '',
+            genre: ''
         })
       };
 
