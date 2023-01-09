@@ -2,6 +2,7 @@
 import * as yup from 'yup';
 
 export const schema = yup.object().shape({
+    image: yup.string().required('image of the game is required'),
     name: yup.string().required('name of the game is required'),
     year: yup.number().positive().integer().required('name of the game is required and has to be a number'),
     console: yup.string().required('console of the game is required'),

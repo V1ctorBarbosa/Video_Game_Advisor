@@ -1,11 +1,8 @@
 //React
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 
 // Schema
 import { schema } from './Schema';
-
-//Dropzone
-import {useDropzone} from 'react-dropzone';
 
 //HookForm + Yup
 import {useForm} from 'react-hook-form';
@@ -13,33 +10,29 @@ import {yupResolver} from '@hookform/resolvers/yup';
 
 //Firebase
 import firebase from '../../services/firebase';
+import { ref, uploadBytes } from 'firebase/storage';
+
+//uuid
+import { v4 } from 'uuid';
 
 export default function AdviseForm() {
 
-    const [selectedImage, setSelectedImage] = useState([])
+    const [imageUpload, setImageupload] = useState(null)
 
     const { register, handleSubmit, formState: {errors}, reset} = useForm({
         resolver: yupResolver(schema),
       });
 
-    const onDrop = useCallback(acceptedFiles => {
-        setSelectedImage(acceptedFiles.map(file =>
-            Object.assign(file, {
-                preview: URL.createObjectURL(file)
-            })
-        ))
-      }, [])
-
-      const {getRootProps, getInputProps} = useDropzone({onDrop})
-      const selected_images = selectedImage?.map(file=>(
-        <div>
-            <img src={file.preview} style={{width: '200px'}} alt='' />
-        </div>
-      ))
-
       const submitForm =  async (data) => {
+        if(imageUpload == null) return
+        const imageRef = ref(firebase.storage(), `images/${imageUpload.name + v4()}`)
+        uploadBytes(imageRef, imageUpload).then(() => {
+            alert('foi, porra')
+        })
+        
         let id = 1;
         await firebase.firestore().collection('advise').doc(`${id}`).set({
+            image: '',
             name: data.name,
             year: data.year,
             console: data.console,
@@ -48,6 +41,7 @@ export default function AdviseForm() {
         })
 
         reset({
+            image: null,
             name: '',
             year: 0,
             console: '',
@@ -55,20 +49,24 @@ export default function AdviseForm() {
             genre: ''
         })
       };
+      console.log(imageUpload)
 
 
   return (
     <div>
-        <div>
-            <div {...getRootProps()}>
-                <input {...getInputProps()} />
-                    <p>Drop the files here ...</p> :
-                    <p>Drag 'n' drop some files here, or click to select files</p>
-                <div>{selected_images}</div>
-            </div>
-        </div>
-
         <form onSubmit={handleSubmit(submitForm)}>
+
+            <label>
+                Image:
+                <input
+                    type='file'
+                    name='image'
+                    onChange={(e) => {
+                        setImageupload(e.target.files[0])
+                    }}
+                    {...register('image')}
+                />
+            </label>
             <label>
                 Name:
                 <input 
