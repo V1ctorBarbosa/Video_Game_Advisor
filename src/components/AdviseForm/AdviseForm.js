@@ -1,5 +1,5 @@
 //React
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Schema
 import { schema } from './Schema';
@@ -10,74 +10,61 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 //Firebase
 import { firestore, storage } from '../../services/firebase';
-import { uploadBytes , ref } from 'firebase/storage';
+import { uploadBytes , ref, getDownloadURL } from 'firebase/storage';
 
 
 export default function AdviseForm() {
 
-    const [ image, setImage ] = useState(null)
+  const [ image, setImage ] = useState(null)
+  const [ gameID, setGameID ] = useState(0)
+
+  const { register, handleSubmit, formState: {errors}, reset} = useForm({
+      resolver: yupResolver(schema),
+    });
+
+    useEffect(() => {
+        async function loadID() {
+          await firestore.collection("advise")
+            .onSnapshot((snapshot) => {
+              const list = [];
     
-    const handleChange = (e) => {
-        console.log(e.target.files)
-        setImage(URL.createObjectURL(e.target.files[0]))
-    }
-
-    const { register, handleSubmit, formState: {errors}, reset} = useForm({
-        resolver: yupResolver(schema),
-      });
-    
-    // const uploadImage = () => {
-    //     if(image != null){
-    //         const imageRef = ref(storage, `images/${image.name}`)
-    //         uploadBytes(imageRef, image).then(() => {
-    //             alert('foi')
-    //         })
-    //     }
-    // }
-
-    const metadata = {
-        contentType: 'image/png',
-    };
-
-     const submitForm =  async (data) => {
-        if(image != null){
-            const imageRef = ref(storage, `images/${image.name}`)
-            uploadBytes(imageRef, image, metadata).then(() => {
-                alert('foi')
-            })
-        }
-
-    try{  
-        let id = 1;
-
-        await storage
-        .ref(`images`)
-        .child(`logo-${id}`)
-        .put(data.image)
-        .then(async () => {
-        await storage
-            .ref(`images`)
-            .child(`logo-${id}`)
-            .getDownloadURL()
-            .then(async (url) => {
-            await firestore
-                .collection("advise")
-                .doc(`${id}`)
-                .set({
-                image: url,
-                name: data.name,
-                year: data.year,
-                console: data.console,
-                studio: data.studio,
-                genre: data.genre
+              snapshot.forEach((doc) => {
+                list.push({
+                  id: doc.id,
+                  ...doc.data(),
                 });
             });
-        });
+            setGameID(list.length + 1)
+          });
+        }
+      loadID();
+    }, []);
+
+  const submitForm =  async (data) => {
+    try{  
+    if(image != null){
+        const imageRef = ref(storage, `images/${image.name}`)
+        uploadBytes(imageRef, image).then(() => {
+            getDownloadURL(imageRef)
+            .then(async (url) => {
+                await firestore
+                .collection("advise")
+                .doc(`${gameID}`)
+                .set({
+                    image: url,
+                    name: data.name,
+                    year: data.year,
+                    console: data.console,
+                    studio: data.studio,
+                    genre: data.genre
+                });
+              })
+            })
+        }
 
     } catch(error){
         console.log(error)
     }
-
     reset({
         image: '',
         name: '',
@@ -88,7 +75,6 @@ export default function AdviseForm() {
     })
 };
 
-
   return (
     <div>
         <form onSubmit={handleSubmit(submitForm)}>
@@ -98,7 +84,7 @@ export default function AdviseForm() {
                     type='file'
                     name='image'
                     {...register('image')}  
-                    onChange={handleChange}
+                    onChange={e => setImage(e.target.files[0])}
                 />
                 <p>{errors.image?.message}</p>
             </label>
@@ -153,7 +139,6 @@ export default function AdviseForm() {
             </label>
             <button type='submit'>Enviar</button>
         </form>
-        <img src={image} alt='cachorro'/>
     </div>
   )
 }
