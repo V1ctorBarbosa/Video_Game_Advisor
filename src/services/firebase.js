@@ -1,5 +1,5 @@
 import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import { getStorage } from "firebase/storage";
 import 'firebase/compat/firestore';
 import 'firebase/compat/storage'
 
@@ -13,8 +13,13 @@ let firebaseConfig = {
     measurementId: "G-5VB3KR05RF"
   };
 
-if(!firebase.apps.length){
-    firebase.initializeApp(firebaseConfig)
-}
+//init firebase
+const app = firebase.initializeApp(firebaseConfig)
 
-export default firebase
+//Firestore
+const firestore = firebase.firestore()
+
+//Storage
+  const storage = firebase.storage()
+
+export {firestore, storage}

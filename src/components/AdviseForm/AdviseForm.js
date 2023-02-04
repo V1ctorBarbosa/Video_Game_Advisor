@@ -5,67 +5,84 @@ import React, {useState} from 'react';
 import { schema } from './Schema';
 
 //HookForm + Yup
-import {useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 //Firebase
-import firebase from '../../services/firebase';
-import { ref, uploadBytes } from 'firebase/storage';
+import { firestore, storage } from '../../services/firebase';
 
 //uuid
 import { v4 } from 'uuid';
 
 export default function AdviseForm() {
 
-    const [imageUpload, setImageupload] = useState(null)
+    const [ cachorro, setCachorro] = useState(null)
 
     const { register, handleSubmit, formState: {errors}, reset} = useForm({
         resolver: yupResolver(schema),
       });
 
-      const submitForm =  async (data) => {
-        if(imageUpload == null) return
-        const imageRef = ref(firebase.storage(), `images/${imageUpload.name + v4()}`)
-        uploadBytes(imageRef, imageUpload).then(() => {
-            alert('foi, porra')
-        })
-        
-        let id = 1;
-        await firebase.firestore().collection('advise').doc(`${id}`).set({
-            image: '',
-            name: data.name,
-            year: data.year,
-            console: data.console,
-            studio: data.studio,
-            genre: data.genre
-        })
+    const image = (e) => {
+        setCachorro(...e.target.file)
+    }
 
-        reset({
-            image: null,
-            name: '',
-            year: 0,
-            console: '',
-            studio: '',
-            genre: ''
-        })
-      };
-      console.log(imageUpload)
+      const submitForm =  async (data) => {
+        console.log(cachorro)
+        // try{  
+        //     let id = 1;
+
+        //     await storage
+        //     .ref(`images`)
+        //     .child(`logo-${id}`)
+        //     .put(data.image)
+        //     .then(async () => {
+        //     await storage
+        //         .ref(`images`)
+        //         .child(`logo-${id}`)
+        //         .getDownloadURL
+        //         .then(async (url) => {
+        //         await firestore
+        //             .collection("advise")
+        //             .doc(`${id}`)
+        //             .set({
+        //             image: url,
+        //             name: data.name,
+        //             year: data.year,
+        //             console: data.console,
+        //             studio: data.studio,
+        //             genre: data.genre
+        //             });
+        //         });
+        //     });
+
+        //     setCachorro(data.image)
+        // } catch(error){
+        //     console.log(error)
+        // }
+
+        // reset({
+        //     image: '',
+        //     name: '',
+        //     year: null,
+        //     console: '',
+        //     studio: '',
+        //     genre: ''
+        // })
+    };
 
 
   return (
     <div>
         <form onSubmit={handleSubmit(submitForm)}>
-
             <label>
                 Image:
                 <input
                     type='file'
                     name='image'
-                    onChange={(e) => {
-                        setImageupload(e.target.files[0])
-                    }}
-                    {...register('image')}
+                    {...register('image')}  
+                    onChange={image}
                 />
+                <p>{errors.image?.message}</p>
             </label>
             <label>
                 Name:
@@ -116,9 +133,9 @@ export default function AdviseForm() {
                 />
                 <p>{errors.genre?.message}</p>
             </label>
-
             <button type='submit'>Enviar</button>
         </form>
+        <img src={cachorro} alt='cachorro'/>
     </div>
   )
 }
