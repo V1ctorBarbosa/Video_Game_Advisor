@@ -23,16 +23,16 @@ export default function AdviseForm() {
     });
 
     useEffect(() => {
-        async function loadID() {
-          await firestore.collection("advise")
-            .onSnapshot((snapshot) => {
-              const list = [];
+      async function loadID() {
+        await firestore.collection("advise")
+        .onSnapshot((snapshot) => {
+            const list = [];
     
-              snapshot.forEach((doc) => {
-                list.push({
-                  id: doc.id,
-                  ...doc.data(),
-                });
+            snapshot.forEach((doc) => {
+              list.push({
+                id: doc.id,
+                ...doc.data(),
+              });
             });
             setGameID(list.length + 1)
           });
@@ -42,38 +42,38 @@ export default function AdviseForm() {
 
   const submitForm =  async (data) => {
     try{  
-    if(image != null){
+      if(image != null){
         const imageRef = ref(storage, `images/${image.name}`)
         uploadBytes(imageRef, image).then(() => {
-            getDownloadURL(imageRef)
-            .then(async (url) => {
-                await firestore
-                .collection("advise")
-                .doc(`${gameID}`)
-                .set({
-                    image: url,
-                    name: data.name,
-                    year: data.year,
-                    console: data.console,
-                    studio: data.studio,
-                    genre: data.genre
-                });
-              })
+          getDownloadURL(imageRef)
+          .then(async (url) => {
+            await firestore
+            .collection("advise")
+            .doc(`${gameID}`)
+            .set({
+                image: url,
+                name: data.name,
+                year: data.year,
+                console: data.console,
+                studio: data.studio,
+                genre: data.genre
+              });
             })
+          })
         }
-
-    } catch(error){
+      } 
+      catch(error){
         console.log(error)
-    }
-    reset({
-        image: '',
-        name: '',
-        year: null,
-        console: '',
-        studio: '',
-        genre: ''
-    })
-};
+      }
+        reset({
+            image: '',
+            name: '',
+            year: null,
+            console: '',
+            studio: '',
+            genre: ''
+        })
+    };
 
   return (
     <div>

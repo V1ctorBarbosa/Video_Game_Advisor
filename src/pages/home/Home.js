@@ -7,6 +7,9 @@ import {AiOutlinePlus} from "react-icons/ai";
 //Router
 import { Link } from 'react-router-dom';
 
+//Components
+import GameScreen from '../../components/GameScreen/gameScreen';
+
 
 export default function Home() {
   return (
@@ -15,6 +18,7 @@ export default function Home() {
       <Link to='/create'>
         <AiOutlinePlus/>
       </Link>
+      <GameScreen />
     </div>
   )
 }
