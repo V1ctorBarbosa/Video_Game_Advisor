@@ -1,6 +1,9 @@
 //React
 import React from 'react';
 
+//Styles
+import { Container } from './CreateStyles'
+
 //ReactIcons
 import { AiOutlineLeft } from "react-icons/ai";
 
@@ -12,12 +15,11 @@ import AdviseForm from '../../components/AdviseForm/AdviseForm';
 
 export default function Create() {
   return (
-    <div>
-      <h1>Página de criação</h1>
+    <Container>
       <Link to='/'>
         <AiOutlineLeft/>
       </Link>
       <AdviseForm />
-    </div>
+    </Container>
   )
 }

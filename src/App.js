@@ -1,6 +1,9 @@
 //React
 import React from "react";
 
+//Styled
+import './styles/global.css'
+
 //Pages
 import Home from './pages/home/Home';
 import Create from "./pages/create/Create";
@@ -9,8 +12,6 @@ import Error from "./pages/error/Error";
 //Router
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-//Context
-import { AdviseContext } from "./context/advise";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         <Route path="/create" element={<Create />}/>
         <Route path="*" element={<Error />}/>
       </Routes>
-    </Router>    
+    </Router> 
   );
 }
 

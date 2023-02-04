@@ -1,6 +1,9 @@
 //React
 import React from 'react'
 
+//Components
+import { Container } from  './HomeStyles'
+
 //ReactIcons
 import {AiOutlinePlus} from "react-icons/ai";
 
@@ -13,12 +16,11 @@ import GameScreen from '../../components/GameScreen/gameScreen';
 
 export default function Home() {
   return (
-    <div>
-      <h1>Home</h1>
+    <Container>
       <Link to='/create'>
         <AiOutlinePlus/>
       </Link>
       <GameScreen />
-    </div>
+    </Container>
   )
 }

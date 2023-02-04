@@ -1,4 +1,18 @@
-import React, { useState, useEffect } from 'react'
+//React
+import React, { 
+  useState,
+  useEffect
+} from 'react'
+
+//Styles
+import {
+  Container,
+  Top,
+  AdviseImage,
+  NullImage,
+  Bottom,
+  Button
+} from './gameScreenStyles'
 
 //Firestore
 import { doc, onSnapshot } from "firebase/firestore";
@@ -37,13 +51,22 @@ function GameScreen() {
     })
   }
 
-    
   return (
-    <>
-      <div>gameScreen</div>
-      {advise == null ? <img alt='advise' /> :<img src={advise.image} alt='advise' />}
-      <button onClick={LoadData}>generate</button>
-    </>
+    <Container>
+      {
+        advise == null ? 
+        <Top>
+          <NullImage onClick={LoadData}>Click for advise</NullImage>
+        </Top>
+       :
+       <Top>
+          <AdviseImage src={advise.image} alt='advise'/>
+       </Top>
+       }
+       <Bottom>
+          <Button onClick={LoadData}>New Advise</Button>
+       </Bottom>
+    </Container>
   )
 }
 
