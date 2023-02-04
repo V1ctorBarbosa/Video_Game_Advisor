@@ -10,65 +10,83 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 //Firebase
 import { firestore, storage } from '../../services/firebase';
+import { uploadBytes , ref } from 'firebase/storage';
 
-//uuid
-import { v4 } from 'uuid';
 
 export default function AdviseForm() {
 
-    const [ cachorro, setCachorro] = useState(null)
+    const [ image, setImage ] = useState(null)
+    
+    const handleChange = (e) => {
+        console.log(e.target.files)
+        setImage(URL.createObjectURL(e.target.files[0]))
+    }
 
     const { register, handleSubmit, formState: {errors}, reset} = useForm({
         resolver: yupResolver(schema),
       });
+    
+    // const uploadImage = () => {
+    //     if(image != null){
+    //         const imageRef = ref(storage, `images/${image.name}`)
+    //         uploadBytes(imageRef, image).then(() => {
+    //             alert('foi')
+    //         })
+    //     }
+    // }
 
-    const image = (e) => {
-        setCachorro(...e.target.file)
+    const metadata = {
+        contentType: 'image/png',
+    };
+
+     const submitForm =  async (data) => {
+        if(image != null){
+            const imageRef = ref(storage, `images/${image.name}`)
+            uploadBytes(imageRef, image, metadata).then(() => {
+                alert('foi')
+            })
+        }
+
+    try{  
+        let id = 1;
+
+        await storage
+        .ref(`images`)
+        .child(`logo-${id}`)
+        .put(data.image)
+        .then(async () => {
+        await storage
+            .ref(`images`)
+            .child(`logo-${id}`)
+            .getDownloadURL()
+            .then(async (url) => {
+            await firestore
+                .collection("advise")
+                .doc(`${id}`)
+                .set({
+                image: url,
+                name: data.name,
+                year: data.year,
+                console: data.console,
+                studio: data.studio,
+                genre: data.genre
+                });
+            });
+        });
+
+    } catch(error){
+        console.log(error)
     }
 
-      const submitForm =  async (data) => {
-        console.log(cachorro)
-        // try{  
-        //     let id = 1;
-
-        //     await storage
-        //     .ref(`images`)
-        //     .child(`logo-${id}`)
-        //     .put(data.image)
-        //     .then(async () => {
-        //     await storage
-        //         .ref(`images`)
-        //         .child(`logo-${id}`)
-        //         .getDownloadURL
-        //         .then(async (url) => {
-        //         await firestore
-        //             .collection("advise")
-        //             .doc(`${id}`)
-        //             .set({
-        //             image: url,
-        //             name: data.name,
-        //             year: data.year,
-        //             console: data.console,
-        //             studio: data.studio,
-        //             genre: data.genre
-        //             });
-        //         });
-        //     });
-
-        //     setCachorro(data.image)
-        // } catch(error){
-        //     console.log(error)
-        // }
-
-        // reset({
-        //     image: '',
-        //     name: '',
-        //     year: null,
-        //     console: '',
-        //     studio: '',
-        //     genre: ''
-        // })
-    };
+    reset({
+        image: '',
+        name: '',
+        year: null,
+        console: '',
+        studio: '',
+        genre: ''
+    })
+};
 
 
   return (
@@ -80,7 +98,7 @@ export default function AdviseForm() {
                     type='file'
                     name='image'
                     {...register('image')}  
-                    onChange={image}
+                    onChange={handleChange}
                 />
                 <p>{errors.image?.message}</p>
             </label>
@@ -135,7 +153,7 @@ export default function AdviseForm() {
             </label>
             <button type='submit'>Enviar</button>
         </form>
-        <img src={cachorro} alt='cachorro'/>
+        <img src={image} alt='cachorro'/>
     </div>
   )
 }
