@@ -2,13 +2,7 @@
 import React from 'react';
 
 //Styles
-import { Container } from './CreateStyles'
-
-//ReactIcons
-import { AiOutlineLeft } from "react-icons/ai";
-
-//Router
-import { Link } from 'react-router-dom';
+import { Container, Icon, LinkContainer } from './CreateStyles'
 
 //Components
 import AdviseForm from '../../components/AdviseForm/AdviseForm';
@@ -16,9 +10,9 @@ import AdviseForm from '../../components/AdviseForm/AdviseForm';
 export default function Create() {
   return (
     <Container>
-      <Link to='/'>
-        <AiOutlineLeft/>
-      </Link>
+      <LinkContainer to='/'>
+        <Icon size={30}/>
+      </LinkContainer>
       <AdviseForm />
     </Container>
   )

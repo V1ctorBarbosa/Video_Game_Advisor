@@ -2,13 +2,7 @@
 import React from 'react'
 
 //Components
-import { Container } from  './HomeStyles'
-
-//ReactIcons
-import {AiOutlinePlus} from "react-icons/ai";
-
-//Router
-import { Link } from 'react-router-dom';
+import { Container, Icon, LinkContainer } from  './HomeStyles'
 
 //Components
 import GameScreen from '../../components/GameScreen/gameScreen';
@@ -17,9 +11,9 @@ import GameScreen from '../../components/GameScreen/gameScreen';
 export default function Home() {
   return (
     <Container>
-      <Link to='/create'>
-        <AiOutlinePlus/>
-      </Link>
+      <LinkContainer to='/create'>
+        <Icon size={30}/>
+      </LinkContainer>
       <GameScreen />
     </Container>
   )

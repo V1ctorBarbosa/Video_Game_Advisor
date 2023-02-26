@@ -25,6 +25,6 @@ const db = getFirestore()
 const firestore = firebase.firestore()
 
 //Storage
-  const storage = firebase.storage()
+const storage = firebase.storage()
 
 export {firestore, storage, app, db}

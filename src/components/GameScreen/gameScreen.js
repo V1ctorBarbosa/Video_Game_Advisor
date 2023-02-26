@@ -7,10 +7,10 @@ import React, {
 //Styles
 import {
   Container,
-  Top,
+  Main,
   AdviseImage,
   NullImage,
-  Bottom,
+  Footer,
   Button
 } from './gameScreenStyles'
 
@@ -55,17 +55,17 @@ function GameScreen() {
     <Container>
       {
         advise == null ? 
-        <Top>
+        <Main>
           <NullImage onClick={LoadData}>Click for advise</NullImage>
-        </Top>
+        </Main>
        :
-       <Top>
+       <Main>
           <AdviseImage src={advise.image} alt='advise'/>
-       </Top>
+       </Main>
        }
-       <Bottom>
+       <Footer>
           <Button onClick={LoadData}>New Advise</Button>
-       </Bottom>
+       </Footer>
     </Container>
   )
 }
