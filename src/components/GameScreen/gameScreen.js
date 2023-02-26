@@ -43,11 +43,9 @@ function GameScreen() {
   
   const LoadData = async () => {
     let id = Math.floor(Math.random() * advisesQuantity) + 1
-    console.log(id)
     const docRef = doc(db, "advise", id.toString());
     onSnapshot(docRef, (doc) => {
         setAdvise(doc.data())
-        console.log(advise)
     })
   }
 

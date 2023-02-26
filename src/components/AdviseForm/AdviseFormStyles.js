@@ -22,9 +22,15 @@ export const Form = styled.form`
     padding: 1rem;
     background-color: #000000;
 `
-export const PreviewSection = styled.div``
+export const PreviewSection = styled.div`
+    display: flex;
+    flex-direction: column;
+`
 
-export const AdvisePreview = styled.img``
+export const AdvisePreview = styled.img`
+    width: 400px;
+    height: fit-content;
+`
 
 export const FormSection = styled.div`
     display: flex;
