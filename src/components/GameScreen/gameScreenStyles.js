@@ -9,14 +9,11 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
 
+    position: relative;
+
     button, div {
         font-family: 'Press Start 2P', cursive;
     }
-`
-export const Main = styled.main`
-    height: 70%;
-    display: flex;
-    justify-content: center;
 `
 
 export const NullImage = styled.div`
@@ -30,24 +27,26 @@ export const AdviseImage = styled.img`
     height: fit-content;
     max-height: 100%;
 
-    margin: auto;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
     padding: 1.5rem;
 
     border: solid 5px #ffffff;
     background-color: #000000;
 `
 
-export const Footer = styled.footer`
-    height: 30%;
-    display: flex;
-    justify-content: center;
-`
-
 export const Button = styled.button`
     width: max-content;
     height: fit-content;
 
-    margin: auto;
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
     padding: 1rem;
 
     font-weight: 600;

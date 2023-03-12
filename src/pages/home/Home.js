@@ -7,7 +7,6 @@ import { Container, Icon, LinkContainer } from  './HomeStyles'
 //Components
 import GameScreen from '../../components/GameScreen/gameScreen';
 
-
 export default function Home() {
   return (
     <Container>

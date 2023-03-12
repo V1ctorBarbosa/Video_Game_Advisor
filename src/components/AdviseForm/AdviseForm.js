@@ -97,10 +97,7 @@ export default function AdviseForm() {
     <Container>
         <Form onSubmit={handleSubmit(submitForm)}>
           <PreviewSection>
-            <AdvisePreview 
-              src={ imageUpload ? URL.createObjectURL(imageUpload) : ''}
-              alt='preview'
-            />
+            { imageUpload ? <AdvisePreview src={URL.createObjectURL(imageUpload)} alt='preview'/> : ''}
             <Button onClick={handleClick}>
               {imageUpload == null ? 'Upload Advise Image' : 'Is This Your Advise?'}
             </Button>

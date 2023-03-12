@@ -53,17 +53,11 @@ function GameScreen() {
     <Container>
       {
         advise == null ? 
-        <Main>
-          <NullImage onClick={LoadData}>Click for advise</NullImage>
-        </Main>
-       :
-       <Main>
-          <AdviseImage src={advise.image} alt='advise'/>
-       </Main>
-       }
-       <Footer>
-          <Button onClick={LoadData}>New Advise</Button>
-       </Footer>
+        <NullImage onClick={LoadData}>Click for advise</NullImage> 
+        :
+        <AdviseImage src={advise.image} alt='advise'/>
+      }
+      <Button onClick={LoadData}>New Advise</Button>
     </Container>
   )
 }

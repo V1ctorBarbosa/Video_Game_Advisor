@@ -26,9 +26,9 @@ export const Icon = styled(AiOutlinePlus)`
     background-color: #000;
 
     border: solid 3px #fff;
-
     padding: 8px;
 `
+
 export const LinkContainer = styled(Link)`
     position: absolute;
     top: 10px;
